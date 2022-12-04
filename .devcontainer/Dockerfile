@@ -1,5 +1,5 @@
 # [Choice] Debian / Ubuntu version (use Debian 11, Ubuntu 18.04/22.04 on local arm64/Apple Silicon): debian-11, debian-10, ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
-ARG VARIANT=debian-11
+ARG VARIANT=ubuntu-22.04
 FROM mcr.microsoft.com/vscode/devcontainers/cpp:0-${VARIANT}
 
 # [Optional] Install CMake version different from what base image has already installed. 
@@ -18,4 +18,4 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 
 # [Optional] Uncomment this section to install additional packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-     && apt-get -y install --no-install-recommends libc++-15-dev libc++abi-15-dev
+    && apt-get -y install --no-install-recommends libc++-15-dev libc++abi-15-dev
