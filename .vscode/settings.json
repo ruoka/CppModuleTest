@@ -1,5 +1,4 @@
 {
-    "C_Cpp.autocompleteAddParentheses": true,
     "files.associations": {
         "*.c++m": "cpp"
     }
