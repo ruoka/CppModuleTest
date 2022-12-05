@@ -6,7 +6,7 @@ USER root
 # Install needed packages. Use a separate RUN statement to add your own dependencies.
 RUN export DEBIAN_FRONTEND=noninteractive \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key| apt-key add - \
-    && apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-15 main" \
+    && apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
     && apt-get update \
     && apt-get -y install build-essential cmake cppcheck valgrind gdb clang-15 lldb-15 lld-15 libc++-15-dev libc++abi-15-dev \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
