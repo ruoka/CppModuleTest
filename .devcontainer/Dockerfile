@@ -6,7 +6,7 @@ USER root
 # Install needed packages. Use a separate RUN statement to add your own dependencies.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add - \
-    && apt-get -y install build-essential cmake cppcheck valgrind clang-14 lldb-14 lld-14 llvm-14 libc++-14-dev libc++abi-14-dev gdb \
+    && apt-get -y install build-essential cmake cppcheck valgrind gdb clang-14 lldb-14 lld-14 libc++-14-dev libc++abi-14-dev \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 #    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add - \
 #    && apt-get -y install build-essential cmake cppcheck valgrind gdb clang-15 lldb-15 lld-15 libc++-15-dev libc++abi-15-dev \
