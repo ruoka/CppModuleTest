@@ -22,7 +22,6 @@ RUN chmod +x /tmp/install-vcpkg.sh \
     && rm -f /tmp/install-vcpkg.sh
 
 # [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
-
-RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -y install --no-install-recommends lsb_release add-apt-repository \
+    && bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
