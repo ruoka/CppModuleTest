@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.c++": "cpp",
         "*.c++m": "cpp"
     }
 }
