@@ -23,7 +23,9 @@ RUN chmod +x /tmp/install-vcpkg.sh \
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#    && apt-get -y install --no-install-recommends lsb_release wget add-apt-repository gpg \
-#    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && sudo ./llvm.sh 14
-#    && apt-get install clang-15 lldb-15 lld-15
-     && apt-get install clang-14 lldb-14 lld-14
+    && apt-get -y install --no-install-recommends lsb_release wget add-apt-repository gpg \
+    && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
+    && sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-11 main" \
+    && sudo apt-get update \
+    && sudo apt-get install -y llvm-15 llvm-15-dev clang-15 llvm-15-tools \
+    
