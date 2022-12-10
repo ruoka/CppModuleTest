@@ -27,5 +27,4 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
     && sudo apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
     && sudo apt-get update \
-    && sudo apt-get install -y llvm-15 llvm-15-dev clang-15 llvm-15-tools \
-    
+    && sudo apt-get install -y llvm-15 llvm-15-dev clang-15 llvm-15-tools
