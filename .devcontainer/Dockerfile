@@ -25,6 +25,7 @@ RUN chmod +x /tmp/install-vcpkg.sh \
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends wget software-properties-common \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
-    && sudo apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
-    && sudo apt-get update \
-    && sudo apt-get -y install --no-install-recommends llvm-15 llvm-15-dev clang-15 llvm-15-tools
+    && apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
+    && apt-get update \
+    && apt-get -y install libllvm-15-ocaml-dev libllvm15 llvm-15 llvm-15-dev llvm-15-doc llvm-15-examples llvm-15-runtime \
+    && apt-get -y install libc++-15-dev libc++abi-15-dev
