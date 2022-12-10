@@ -1,13 +1,18 @@
-# [Choice] Debian / Ubuntu version (use Debian 11, Ubuntu 18.04/22.04 on local arm64/Apple Silicon): debian-11, debian-10, ubuntu-22.04, ubuntu-20.04, ubuntu-18.04
-ARG VARIANT=ubuntu
-FROM mcr.microsoft.com/devcontainers/base:0-${VARIANT}
+# [Choice] Ubuntu version (use jammy or bionic on local arm64/Apple Silicon): jammy, focal, bionic
+ARG VARIANT="focal"
+FROM buildpack-deps:${VARIANT}-curl
 
-USER root
-
-# Install needed packages. Use a separate RUN statement to add your own dependencies.
-#RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#    && apt-get -y install build-essential cmake cppcheck valgrind clang lldb llvm gdb \
-#    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+# Options for setup script
+ARG INSTALL_ZSH="true"
+ARG UPGRADE_PACKAGES="true"
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+# Install needed packages and setup non-root user. Use a separate RUN statement to add your own dependencies.
+COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
+RUN yes | unminimize 2>&1 \ 
+    && bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
@@ -16,17 +21,3 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
     && apt-get update \
     && apt-get -y install --no-install-recommends clang-15 lldb-15 lld-15 libc++-15-dev libc++abi-15-dev cmake cppcheck valgrind gdb
-
-# Setup ENV vars for vcpkg
-ENV VCPKG_ROOT=/usr/local/vcpkg \
-    VCPKG_DOWNLOADS=/usr/local/vcpkg-downloads
-ENV PATH="${PATH}:${VCPKG_ROOT}"
-
-ARG USERNAME=vscode
-
-# Install vcpkg itself: https://github.com/microsoft/vcpkg/blob/master/README.md#quick-start-unix
-COPY base-scripts/install-vcpkg.sh /tmp/
-RUN chmod +x /tmp/install-vcpkg.sh \
-    && ./tmp/install-vcpkg.sh ${USERNAME} \
-    && rm -f /tmp/install-vcpkg.sh
-    
