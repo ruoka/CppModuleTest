@@ -11,12 +11,11 @@ USER root
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends cmake cppcheck valgrind gdb wget software-properties-common \
+    && apt-get -y install --no-install-recommends wget software-properties-common \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
     && apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
     && apt-get update \
-    && apt-get -y install clang-15 lldb-15 lld-15 \
-    && apt-get -y install libc++-15-dev libc++abi-15-dev
+    && apt-get -y install --no-install-recommends clang-15 lldb-15 lld-15 libc++-15-dev libc++abi-15-dev cmake cppcheck valgrind gdb
 
 # Setup ENV vars for vcpkg
 ENV VCPKG_ROOT=/usr/local/vcpkg \
