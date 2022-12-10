@@ -25,5 +25,5 @@ RUN chmod +x /tmp/install-vcpkg.sh \
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 #    && apt-get -y install --no-install-recommends lsb_release wget add-apt-repository gpg \
 #    && wget https://apt.llvm.org/llvm.sh && chmod +x llvm.sh && sudo ./llvm.sh 14
-    && apt-get install clang-15 lldb-15 lld-15
- 
+#    && apt-get install clang-15 lldb-15 lld-15
+     && apt-get install clang-14 lldb-14 lld-14
