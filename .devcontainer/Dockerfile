@@ -23,7 +23,7 @@ RUN chmod +x /tmp/install-vcpkg.sh \
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends wget \
+    && apt-get -y install --no-install-recommends wget software-properties-common \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - \
     && sudo apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main" \
     && sudo apt-get update \
