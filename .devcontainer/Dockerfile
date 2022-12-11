@@ -1,6 +1,6 @@
 # [Choice] Ubuntu version
 ARG VARIANT="kinetic"
-FROM ubuntu:${VARIANT}
+FROM buildpack-deps:${VARIANT}-curl
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN export DEBIAN_FRONTEND=noninteractive \
