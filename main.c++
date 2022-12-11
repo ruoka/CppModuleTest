@@ -1,7 +1,8 @@
 import test;
+
 int main()
 {
-    test::foo(1);
-    test::bar(1.0);
-    test::bar(2);
+    test::mudule_with_lambdas::foo(1);
+    test::mudule_with_lambdas::bar(1.0);
+    test::mudule_with_lambdas::bar(2);
 }
