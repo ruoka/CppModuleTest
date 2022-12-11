@@ -1,10 +1,10 @@
-# [Choice] Ubuntu version (use jammy or bionic on local arm64/Apple Silicon): jammy, focal, bionic
+# [Choice] Ubuntu version
 ARG VARIANT="kinetic"
-FROM buildpack-deps:${VARIANT}-curl
+FROM ubuntu:${VARIANT}
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends software-properties-common \
+    && apt-get -y install --no-install-recommends wget software-properties-common \
     && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
     && apt-add-repository "deb http://apt.llvm.org/kinetic/ llvm-toolchain-kinetic-15 main" \
     && apt-get update \
