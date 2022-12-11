@@ -4,4 +4,5 @@
         "*.c++m": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled",
+    "terminal.integrated.gpuAcceleration": "off"
 }
