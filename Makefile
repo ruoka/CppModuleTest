@@ -15,7 +15,7 @@ objects := $(objects:%.c++m=%.o)
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 %.test.o: %.test.c++
-	$(CXX) $(CXXFLAGS) -std=c++20 -x c++-module $< -fmodule-file=$*.pcm -c -o $@
+	$(CXX) $(CXXFLAGS) $< -fmodule-file=$*.pcm -c -o $@
 
 %.o: %.c++
 	$(CXX) $(CXXFLAGS) $< -c -o $@
