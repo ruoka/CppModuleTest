@@ -33,12 +33,12 @@ $(program).d:
 
 -include $(program).d
 
+.PHONY: all
+all: $(program).d $(program)
+
 .PHONY: clean
 clean:
 	rm -f *.o *.pcm $(program).d $(program)
-
-.PHONY: all
-all: $(program).d $(program)
 
 .PHONY: info
 info:
