@@ -1,4 +1,5 @@
 import test;
+import example;
 
 //using namespace test;
 //using namespace with_lambdas;
