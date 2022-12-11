@@ -20,7 +20,7 @@ objects := $(objects:%.c++m=%.o)
 main: $(objects)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-$(program).d:
+$(program).d: $(sources)
 	rm -f $(program).d
 #c++
 	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++ | sed -E 's/(^[a-z_0-9]+)\.c\+\+:\s*import\s*([a-z_0-9]+);/\1.o: \2.pcm/' > $(program).d
