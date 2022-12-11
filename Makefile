@@ -1,18 +1,28 @@
 .DEFAULT_GOAL := all
 
-.PHONY: pcm
-pcm:
-	/usr/lib/llvm-15/bin/clang++ -std=c++20 -fprebuilt-module-path=. --precompile -c test-with_lambdas.c++m -o test-with_lambdas.pcm
-	/usr/lib/llvm-15/bin/clang++ -std=c++20 -fprebuilt-module-path=. --precompile -c test.c++m -o test.pcm
+CXX := /usr/lib/llvm-15/bin/clang++
 
-.PHONY: obj
-obj: pcm
-	/usr/lib/llvm-15/bin/clang++ -std=c++20 -fprebuilt-module-path=. -c test-with_lambdas.pcm -o test-with_lambdas.o
-	/usr/lib/llvm-15/bin/clang++ -std=c++20 -fprebuilt-module-path=. -c test.pcm -o test.o
+CXXFLAGS := -std=c++20 -fprebuilt-module-path=.
 
-.PHONY: exe
-exe: obj
-	/usr/lib/llvm-15/bin/clang++ -std=c++20 -fprebuilt-module-path=. main.c++ test.o test-with_lambdas.o -o main
+%.pcm: %.c++m
+	$(CXX) $(CXXFLAGS) --precompile -c -o $@ $<
+
+%.o: %.pcm
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o: %.c++
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+test.pcm: test-with_lambdas.pcm
+
+main.o: test.pcm
+
+main: main.o test.o test-with_lambdas.o
+	$(CXX) $(CXXFLAGS) -o $@ $^
 
 .PHONY: all
-all: exe
+all: main
+
+.PHONY: clean
+clean:
+	rm -f *.o *.pcm main
