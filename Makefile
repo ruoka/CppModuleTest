@@ -1,13 +1,12 @@
 .DEFAULT_GOAL := all
 
 CXX := /usr/lib/llvm-15/bin/clang++
-
 CXXFLAGS := -std=c++20 -fprebuilt-module-path=.
 
-SOURCES := $(wildcard *.c++) $(wildcard *.c++m)
-
-OBJECTS := $(SOURCES:%.c++=%.o)
-OBJECTS := $(OBJECTS:%.c++m=%.o)
+program := main
+sources := $(wildcard *.c++) $(wildcard *.c++m)
+objects := $(sources:%.c++=%.o)
+objects := $(objects:%.c++m=%.o)
 
 %.pcm: %.c++m
 	$(CXX) $(CXXFLAGS) --precompile -c -o $@ $<
@@ -18,30 +17,30 @@ OBJECTS := $(OBJECTS:%.c++m=%.o)
 %.o: %.c++
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-main: $(OBJECTS)
+main: $(objects)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-test.d:
-	rm -f test.d
+$(program).d:
+	rm -f $(program).d
 #c++
-	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++ | sed -E 's/(^[a-z_0-9]+)\.c\+\+:\s*import\s*([a-z_0-9]+);/\1.o: \2.pcm/' > test.d
+	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++ | sed -E 's/(^[a-z_0-9]+)\.c\+\+:\s*import\s*([a-z_0-9]+);/\1.o: \2.pcm/' > $(program).d
 #c++ partition
-	grep -H -E '\s*import\s*:([a-z_0-9]+)' *.c++ | sed -E 's/(^[a-z_0-9]+)\.c\+\+:\s*import\s*([a-z_0-9]+);/\1.o: \1-\2.pcm/' >> test.d
+	grep -H -E '\s*import\s*:([a-z_0-9]+)' *.c++ | sed -E 's/(^[a-z_0-9]+)\.c\+\+:\s*import\s*([a-z_0-9]+);/\1.o: \1-\2.pcm/' >> $(program).d
 #c++m
-	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++m | sed -E 's/(^[a-z_0-9]+)\.c\+\+m:.*import\s*([a-z_0-9]+);/\1.pcm: \2.pcm/' >> test.d
+	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++m | sed -E 's/(^[a-z_0-9]+)\.c\+\+m:.*import\s*([a-z_0-9]+);/\1.pcm: \2.pcm/' >> $(program).d
 #c++m partition
-	grep -H -E '\s*import\s*:([a-z_0-9]+)' *.c++m | sed -E 's/(^[a-z_0-9]+)\.c\+\+m:.*import\s*:([a-z_0-9]+);/\1.pcm: \1-\2.pcm/' >> test.d
+	grep -H -E '\s*import\s*:([a-z_0-9]+)' *.c++m | sed -E 's/(^[a-z_0-9]+)\.c\+\+m:.*import\s*:([a-z_0-9]+);/\1.pcm: \1-\2.pcm/' >> $(program).d
 
--include test.d
+-include $(program).d
 
 .PHONY: clean
 clean:
-	rm -f *.o *.pcm *.d main
+	rm -f *.o *.pcm $(program).d $(program)
 
 .PHONY: all
-all: test.d main
+all: $(program).d $(program)
 
 .PHONY: info
 info:
-	@echo $(SOURCES)
-	@echo $(OBJECTS)
+	@echo $(sources)
+	@echo $(objects)
