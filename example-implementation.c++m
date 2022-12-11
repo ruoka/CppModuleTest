@@ -1,0 +1,5 @@
+export module example:implementation;
+
+export constexpr auto i = 1ui;
+
+export void bar();
