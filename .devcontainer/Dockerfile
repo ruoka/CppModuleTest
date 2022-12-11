@@ -2,12 +2,6 @@
 ARG VARIANT="kinetic"
 FROM buildpack-deps:${VARIANT}-curl
 
-LABEL dev.containers.features="common"
-
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
-
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends software-properties-common \
@@ -15,4 +9,3 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-add-repository "deb http://apt.llvm.org/kinetic/ llvm-toolchain-kinetic-15 main" \
     && apt-get update \
     && apt-get -y install --no-install-recommends clang-15 lldb-15 lld-15 libc++-15-dev libc++abi-15-dev git cmake cppcheck valgrind gdb
-
