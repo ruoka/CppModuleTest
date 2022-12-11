@@ -1,8 +1,11 @@
 import test;
 
+//using namespace test;
+//using namespace with_lambdas;
+
 int main()
 {
-    test::mudule_with_lambdas::foo(1);
-    test::mudule_with_lambdas::bar(1.0);
-    test::mudule_with_lambdas::bar(2);
+    test::with_lambdas::foo(1);
+    test::with_lambdas::bar(1.0);
+    test::with_lambdas::bar(2);
 }

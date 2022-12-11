@@ -1,2 +1,2 @@
 export module test;
-export import :module_with_lambdas;
+export import :with_lambdas;

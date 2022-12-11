@@ -1,0 +1,11 @@
+export module test:with_lambdas;
+
+namespace test
+{
+    namespace with_lambdas
+    {
+        export auto foo = [] (int) {return 1;};
+        export auto bar = [] (double) {return 2;};
+        export auto bar2 = [] (double) {return 3;};
+    }
+}
