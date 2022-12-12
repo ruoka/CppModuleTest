@@ -1,3 +1,5 @@
+#!/bin/sh
+
 alias clang++='/usr/lib/llvm-15/bin/clang++ -stdlib=libc++ -pthread -I/usr/lib/llvm-15/include/c++/v1'
 
 # Precompiling the module

@@ -1,5 +1,5 @@
 module;
 #include <iostream>
-module example:implementation;
+module example;
 
 void bar() {};
