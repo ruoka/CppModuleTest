@@ -18,3 +18,7 @@ https://en.cppreference.com/w/cpp/language/modules
 
 Canonical Project Structure
 https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1204r0.html
+
+ISO Modules
+https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2019/p1103r3.pdf
+
