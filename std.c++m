@@ -1,0 +1,13 @@
+module;
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <string>
+export module std;
+
+export namespace std
+{
+    using std::clog;
+    using std::endl;
+    using std::flush;
+}
