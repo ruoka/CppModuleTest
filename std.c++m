@@ -1,13 +1,35 @@
 module;
+#include <new>
+#include <list>
+#include <map>
 #include <iostream>
-#include <thread>
-#include <chrono>
 #include <string>
 export module std;
 
+export
+{
+    using ::operator new;
+}
+
 export namespace std
 {
+    using std::list;
+    using std::map;
+    using std::string;
+
+    using std::cout;
     using std::clog;
     using std::endl;
     using std::flush;
+
+    using std::operator <<;
+    using std::operator >>;
+
+    using std::operator <;
+    using std::operator >;
+    using std::operator >=;
+    using std::operator <=;
+    using std::operator ==;
+    using std::operator !=;
+    using std::operator <=>;
 }

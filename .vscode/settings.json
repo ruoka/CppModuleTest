@@ -75,12 +75,15 @@
         "__verbose_abort": "cpp",
         "ios": "cpp",
         "locale": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "__tree": "cpp"
     },
     "C_Cpp.default.compilerPath": "/usr/lib/llvm-15/bin/clang++",
     "C_Cpp.default.cppStandard": "c++20",
     "C_Cpp.default.includePath": ["${workspaceFolder}"], 
     "C_Cpp.default.intelliSenseMode": "clang-x64",
-    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.errorSquiggles": "enabled",
     "terminal.integrated.gpuAcceleration": "off"
 }

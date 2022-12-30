@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := all
 
 CXX := /usr/lib/llvm-15/bin/clang++
-CXXFLAGS := -std=c++20 -fprebuilt-module-path=.
+CXXFLAGS := -std=c++20 -stdlib=libc++ -isysroot /usr/lib/llvm-15/ -fprebuilt-module-path=. -I/usr/lib/llvm-15/include/c++/v1
 
 program := main
 sources := $(wildcard *.c++) $(wildcard *.c++m)

@@ -1,3 +1,6 @@
 export module example;
 import :implementation;
+import std;
 import test;
+
+using foo = std::list<std::string>;

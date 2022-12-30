@@ -1,5 +1,4 @@
 module;
-#include <iostream>
 module example;
 
-void bar() {};
+void bar() {auto f = foo{};}
