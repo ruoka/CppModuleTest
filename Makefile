@@ -2,17 +2,17 @@
 
 CXX := /usr/lib/llvm-15/bin/clang++
 CXXFLAGS := -std=c++20 -stdlib=libc++ -isysroot /usr/lib/llvm-15/ -fprebuilt-module-path=. -I/usr/lib/llvm-15/include/c++/v1
+OBJFLAGS := -std=c++20 -fprebuilt-module-path=.
 
 program := main
 sources := $(wildcard *.c++) $(wildcard *.c++m)
 objects := $(sources:%.c++=%.o)
-objects := $(objects:%.c++m=%.o)
 
 %.pcm: %.c++m
 	$(CXX) $(CXXFLAGS) $< --precompile -c -o $@
 
 %.o: %.pcm
-	$(CXX) $(CXXFLAGS) $< -c -o $@
+	$(CXX) $(OBJFLAGS) $< -c -o $@
 
 %.test.o: %.test.c++
 	$(CXX) $(CXXFLAGS) $< -fmodule-file=$*.pcm -c -o $@
