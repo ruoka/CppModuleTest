@@ -1,11 +1,6 @@
-//#include <memory> // needed for map assignment
-//#include <new>
 import test;
 import example;
 import std;
-
-//using namespace test;
-//using namespace with_lambdas;
 
 int main()
 {
