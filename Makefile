@@ -1,18 +1,18 @@
 .DEFAULT_GOAL := all
 
 CXX := /usr/lib/llvm-15/bin/clang++
-CXXFLAGS := -std=c++20 -stdlib=libc++ -isysroot /usr/lib/llvm-15/ -fprebuilt-module-path=. -I/usr/lib/llvm-15/include/c++/v1
-OBJFLAGS := -std=c++20 -fprebuilt-module-path=.
+CXXFLAGS := -std=c++20 -stdlib=libc++ -isysroot /usr/lib/llvm-15/ -fprebuilt-module-path=.
+INCLUDES := -I/usr/lib/llvm-15/include/c++/v1
 
 program := main
 sources := $(wildcard *.c++) $(wildcard *.c++m)
 objects := $(sources:%.c++=%.o)
 
 %.pcm: %.c++m
-	$(CXX) $(CXXFLAGS) $< --precompile -c -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $< --precompile -c -o $@
 
 %.o: %.pcm
-	$(CXX) $(OBJFLAGS) $< -c -o $@
+	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 %.test.o: %.test.c++
 	$(CXX) $(CXXFLAGS) $< -fmodule-file=$*.pcm -c -o $@
