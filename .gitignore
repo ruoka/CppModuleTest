@@ -1,4 +1,4 @@
 *.pcm
 *.o
-*.d
-main
+*.deps
+bin

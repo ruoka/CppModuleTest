@@ -1,49 +1,77 @@
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL = all
+OS = $(shell uname -s)
 
-CXX := /usr/lib/llvm-15/bin/clang++
-CXXFLAGS := -std=c++20 -stdlib=libc++ -isysroot /usr/lib/llvm-15/ -fprebuilt-module-path=.
-INCLUDES := -I/usr/lib/llvm-15/include/c++/v1
+ifeq ($(OS),Linux)
+CXX = /usr/lib/llvm-15/bin/clang++ -pthread
+CXXFLAGS = -I/usr/lib/llvm-15/include/c++/v1
+LDFLAGS = -fuse-ld=lld -lc++ -L/usr/lib/llvm-15/lib/c++
+endif
 
-program := main
-sources := $(wildcard *.c++) $(wildcard *.c++m)
-objects := $(sources:%.c++=%.o)
+ifeq ($(OS),Darwin)
+CXX = /opt/homebrew/opt/llvm/bin/clang++
+CXXFLAGS =-I/opt/homebrew/opt/llvm/include/c++/v1
+LDFLAGS += -L/opt/homebrew/opt/llvm/lib/c++
+endif
 
-%.pcm: %.c++m
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $< --precompile -c -o $@
+CXXFLAGS += -std=c++20 -stdlib=libc++
+CXXFLAGS += -fprebuilt-module-path=$(objectdir)
+CXXFLAGS += -Wall -Wextra
+CXXFLAGS += -I$(sourcedir)
+LDFLAGS += -fuse-ld=lld
 
-%.o: %.pcm
+sourcedir = .
+objectdir = .
+binarydir = bin
+dependencies = $(objectdir)/Makefile.deps
+
+programs = main
+
+targets = $(programs:%=$(binarydir)/%)
+sources = $(filter-out $(programs:%=$(sourcedir)/%.c++), $(wildcard $(sourcedir)/*.c++))
+modules = $(wildcard $(sourcedir)/*.c++m)
+objects = $(modules:$(sourcedir)%.c++m=$(objectdir)%.o) $(sources:$(sourcedir)%.c++=$(objectdir)%.o)
+
+$(objectdir)/%.pcm: $(sourcedir)/%.c++m
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $< --precompile -c -o $@
+
+$(objectdir)/%.o: $(objectdir)/%.pcm
+	@mkdir -p $(@D)
+	$(CXX) $< -c -o $@
+
+$(objectdir)/%.test.o: $(sourcedir)/%.test.c++
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-%.test.o: %.test.c++
-	$(CXX) $(CXXFLAGS) $< -fmodule-file=$*.pcm -c -o $@
-
-%.o: %.c++
+$(objectdir)/%.o: $(sourcedir)/%.c++
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-$(program): $(objects)
-	$(CXX) $(CXXFLAGS) $^ -o $@
+$(binarydir)/%: $(objects) $(libraries)
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(sourcedir)/$(@F).c++ $^ -o $@
 
-$(program).d: $(sources)
-	rm -f $(program).d
+$(dependencies): $(sources) $(modules)
+	@mkdir -p $(@D)
+#c++m module wrapping headers etc.
+	grep -HEL '\export module;' $(sourcedir)/*.c++m | sed -r 's/^(.*\/)([a-z_0-9\-]+).c\+\+m/$(objectdir)\/\2.o: $(objectdir)\/\2.pcm/' > $(dependencies)
 #c++m module interface unit
-	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++m | sed -E 's/(^[a-z_0-9]+)\.c\+\+m:.*import\s*([a-z_0-9]+);/\1.pcm: \2.pcm/' > $(program).d
+	grep -HE '\s*import\s*([a-z_0-9]+)' $(sourcedir)/*.c++m | sed -r 's/^(.*\/)([a-z_0-9\-]+).c\+\+m:import ([a-z_0-9]+);/$(objectdir)\/\2.pcm: $(objectdir)\/\3.pcm/' >> $(dependencies)
 #c++m module partition unit
-	grep -H -E '\s*import\s*:([a-z_0-9]+)' *.c++m | sed -E 's/(^[a-z_0-9]+)\.c\+\+m:.*import\s*:([a-z_0-9]+);/\1.pcm: \1-\2.pcm/' >> $(program).d
-#c++ module implementation unit
-	grep -H -E '\s*module\s*([a-z_0-9]+)' *.test.c++ | sed -E 's/(^[a-z_0-9\-]+)\.test\.c\+\+:\s*module\s*([a-z_0-9]+);/\1.test.o: \2.pcm/' >> $(program).d
-#c++ module user
-	grep -H -E '\s*import\s*([a-z_0-9]+)' *.c++ | sed -E 's/(^[a-z_0-9]+)\.c\+\+:\s*import\s*([a-z_0-9]+);/\1.o: \2.pcm/' >> $(program).d
+	grep -HE '\s*import\s*:([a-z_0-9]+)' $(sourcedir)/*.c++m | sed -r 's/^(.*\/)([a-z_0-9]+)(\-*)([a-z_0-9]*).c\+\+m:(.*)import :([a-z_0-9]+);/$(objectdir)\/\2\3\4.pcm: $(objectdir)\/\2\-\6.pcm/' >> $(dependencies)
+#c++ source code
+	grep -HE '\s*import\s*([a-z_0-9]+)' $(sourcedir)/*.c++ | sed -r 's/^(.*\/)([a-z_0-9\-\.]+).c\+\+:import ([a-z_0-9]+);/$(objectdir)\/\2.o: $(objectdir)\/\3.pcm/' >> $(dependencies)
 
--include $(program).d
+-include $(dependencies)
 
 .PHONY: all
-all: $(program).d $(program)
+all: $(dependencies) $(targets)
 
 .PHONY: clean
 clean:
-	rm -f *.o *.pcm $(program).d $(program)
+	rm -rf $(objectdir)/*.o $(objectdir)/*.pcm $(objectdir)/*.deps $(targets)
 
-.PHONY: info
-info:
-	@echo $(sources)
-	@echo $(objects)
+.PHONY: dump
+dump:
+	$(foreach v, $(sort $(.VARIABLES)), $(if $(filter file,$(origin $(v))), $(info $(v)=$($(v)))))
+	@echo ''

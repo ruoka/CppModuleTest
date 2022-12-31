@@ -1,4 +1,3 @@
-module;
-module example;
+import example;
 
 void bar() {auto f = foo{};}

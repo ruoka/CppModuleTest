@@ -1,4 +1,4 @@
-export module example:implementation;
+module example:implementation;
 
 export constexpr auto i = 1u;
 

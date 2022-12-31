@@ -3,4 +3,7 @@ import :implementation;
 import std;
 import test;
 
-using foo = std::list<std::string>;
+export
+{
+    using foo = std::list<std::string>;
+}
