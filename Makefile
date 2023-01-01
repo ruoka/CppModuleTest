@@ -47,9 +47,9 @@ $(objectdir)/%.o: $(sourcedir)/%.c++
 	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $< -c -o $@
 
-$(binarydir)/%: $(objects) $(libraries)
+$(binarydir)/%: $(sourcedir)/%.c++ $(objects)
 	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(sourcedir)/$(@F).c++ $^ -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 $(dependencies): $(sources) $(modules)
 	@mkdir -p $(@D)
